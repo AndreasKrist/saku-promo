@@ -1,0 +1,294 @@
+@import 'tailwindcss';
+
+/*
+ * Warm cacao identity. These tokens are copied verbatim from the app repo
+ * (apps/web/src/app/globals.css) so the marketing site and the product read
+ * as the same company. Do not invent new hues here — stay inside oklch
+ * hue 42–68.
+ */
+@theme {
+  --color-canvas: oklch(0.972 0.014 67);
+  --color-surface: oklch(0.992 0.007 68);
+  --color-ink: oklch(0.22 0.031 43);
+  --color-muted: oklch(0.5 0.03 52);
+  --color-line: oklch(0.885 0.025 60);
+  --color-brand: oklch(0.65 0.12 58);
+  --color-brand-dark: oklch(0.34 0.07 43);
+  --color-brand-soft: oklch(0.925 0.045 65);
+  --color-positive: oklch(0.48 0.12 155);
+  --color-negative: oklch(0.53 0.16 27);
+
+  /* Marketing-only: the full-bleed dark sections. On-hue near-black. */
+  --color-deep: oklch(0.16 0.035 42);
+  --color-deep-line: oklch(0.32 0.035 45);
+
+  --font-sans:
+    'Segoe UI Variable', 'SF Pro Text', 'SF Pro Display', ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'SFMono-Regular', 'Cascadia Code', 'Roboto Mono', ui-monospace, monospace;
+
+  --radius-sm: 0.65rem;
+  --radius-md: 0.9rem;
+  --radius-lg: 1.15rem;
+  --radius-xl: 1.5rem;
+}
+
+:root {
+  color-scheme: light;
+  --shadow-surface:
+    0 1px 2px oklch(0.25 0.03 45 / 4%), 0 12px 40px oklch(0.25 0.03 45 / 7%);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --glow: oklch(0.87 0.09 62 / 30%);
+  /* Primary button reads against whatever ground it sits on — see .section-deep. */
+  --btn-bg: oklch(0.34 0.07 43);
+  --btn-fg: oklch(0.985 0.008 68);
+}
+
+/*
+ * The app is light-only. A marketing page, though, gets opened at night —
+ * remap the tokens rather than flashing white. Same hue family, inverted
+ * lightness. The deliberately-dark sections go a shade deeper than canvas
+ * so the light/dark section rhythm survives the remap.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-canvas: oklch(0.196 0.026 45);
+    --color-surface: oklch(0.245 0.028 45);
+    --color-ink: oklch(0.955 0.012 67);
+    --color-muted: oklch(0.735 0.024 58);
+    --color-line: oklch(0.33 0.03 48);
+    --color-brand: oklch(0.76 0.115 62);
+    --color-brand-dark: oklch(0.86 0.09 64);
+    --color-brand-soft: oklch(0.315 0.05 50);
+    --color-positive: oklch(0.74 0.13 155);
+    --color-negative: oklch(0.71 0.15 27);
+    --color-deep: oklch(0.125 0.028 42);
+    --color-deep-line: oklch(0.3 0.032 45);
+    --shadow-surface:
+      0 1px 2px oklch(0 0 0 / 30%), 0 12px 40px oklch(0 0 0 / 35%);
+    --glow: oklch(0.62 0.1 60 / 20%);
+    --btn-bg: oklch(0.86 0.09 64);
+    --btn-fg: oklch(0.17 0.03 43);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-canvas);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 92% -12%, var(--glow), transparent 32rem),
+    var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-brand-soft);
+  color: var(--color-brand-dark);
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    opacity 160ms var(--ease-out),
+    transform 120ms var(--ease-out),
+    box-shadow 180ms var(--ease-out);
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* The app's press convention. Feedback on pointer-down, never on release. */
+button:not(:disabled):active,
+a[data-pressable='true']:active {
+  transform: scale(0.975);
+}
+
+:focus-visible {
+  outline: 3px solid oklch(0.68 0.11 58 / 45%);
+  outline-offset: 2px;
+}
+
+/* ---------- brand lockup: identical metrics to the app's BrandLogo ---------- */
+
+.brand-lockup {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-mark {
+  flex: 0 0 auto;
+  border-radius: 0.78rem;
+  object-fit: cover;
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 20%),
+    0 7px 20px oklch(0.33 0.065 45 / 18%);
+}
+
+.brand-word {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 820;
+  letter-spacing: -0.065em;
+  line-height: 1;
+}
+
+.brand-name {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.57rem;
+  font-weight: 620;
+  letter-spacing: 0.015em;
+  line-height: 1.35;
+}
+
+/* ---------- type scale: tracking is size-specific, tight as it grows ---------- */
+
+.display {
+  font-size: clamp(2.4rem, 7.2vw, 5.25rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.042em;
+  text-wrap: balance;
+}
+
+.headline {
+  font-size: clamp(1.9rem, 4.6vw, 3.35rem);
+  font-weight: 780;
+  line-height: 1.06;
+  letter-spacing: -0.034em;
+  text-wrap: balance;
+}
+
+.subhead {
+  font-size: clamp(1.05rem, 1.9vw, 1.4rem);
+  font-weight: 450;
+  line-height: 1.5;
+  letter-spacing: -0.011em;
+  text-wrap: pretty;
+}
+
+.eyebrow {
+  font-size: 0.78rem;
+  font-weight: 680;
+  letter-spacing: 0.085em;
+  text-transform: uppercase;
+}
+
+/* ---------- section chrome ---------- */
+
+.section-deep {
+  background: var(--color-deep);
+  --color-ink: oklch(0.97 0.012 67);
+  --color-muted: oklch(0.75 0.028 58);
+  --color-surface: oklch(0.215 0.032 43);
+  --color-line: var(--color-deep-line);
+  --color-brand-dark: oklch(0.9 0.075 64);
+  --btn-bg: oklch(0.9 0.075 64);
+  --btn-fg: oklch(0.17 0.03 43);
+  color: var(--color-ink);
+}
+
+.btn-primary {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: 0 10px 30px oklch(0.33 0.065 45 / 22%);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+
+.rail {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 3rem);
+}
+
+.card {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-surface);
+}
+
+.lift {
+  transition:
+    transform 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out);
+}
+
+.lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Translucent chrome: content scrolls underneath, no hard 1px divider. */
+.chrome {
+  background: color-mix(in oklab, var(--color-canvas) 72%, transparent);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .chrome {
+    background: var(--color-canvas);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/*
+ * Mirrors the app's pattern exactly. Every scroll-linked effect in
+ * src/components also checks this via useReducedMotion() and renders the
+ * settled state instead of pinning/scrubbing — the CSS below is the backstop,
+ * not the whole story.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

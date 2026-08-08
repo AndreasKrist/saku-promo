@@ -1,0 +1,27 @@
+import { Hero } from '@/components/sections/hero'
+import { Problem } from '@/components/sections/problem'
+import { HowItWorks } from '@/components/sections/how-it-works'
+import { Features } from '@/components/sections/features'
+import { Trust } from '@/components/sections/trust'
+import { Reports } from '@/components/sections/reports'
+import { Partners } from '@/components/sections/partners'
+import { Pricing } from '@/components/sections/pricing'
+import { Faq } from '@/components/sections/faq'
+import { FinalCta } from '@/components/sections/final-cta'
+
+export default function Page() {
+  return (
+    <>
+      <Hero />
+      <Problem />
+      <HowItWorks />
+      <Features />
+      <Trust />
+      <Reports />
+      <Partners />
+      <Pricing />
+      <Faq />
+      <FinalCta />
+    </>
+  )
+}
