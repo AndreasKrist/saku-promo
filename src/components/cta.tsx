@@ -2,14 +2,10 @@ import Link from 'next/link'
 import { site } from '@/lib/site'
 
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] px-6 py-3.5 text-[0.98rem] font-semibold tracking-[-0.012em] whitespace-nowrap'
+  'inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] px-6 py-3 text-[0.94rem] font-bold tracking-[-0.012em] whitespace-nowrap'
 
-/**
- * Every CTA on this site leads to the app and leads with "gratis" — there is
- * no payment gateway yet, so nothing here may say "beli" or carry a price.
- */
 export function PrimaryCta({
-  children = 'Mulai gratis',
+  children = 'Buka SAKU — gratis',
   className = '',
 }: {
   children?: React.ReactNode
@@ -22,7 +18,9 @@ export function PrimaryCta({
       className={`${base} btn-primary ${className}`}
     >
       {children}
-      <span aria-hidden="true">→</span>
+      <span aria-hidden="true" className="text-[1.05em]">
+        →
+      </span>
     </Link>
   )
 }
@@ -40,7 +38,7 @@ export function SecondaryCta({
     <Link
       href={href}
       data-pressable="true"
-      className={`${base} border border-line bg-surface text-ink hover:border-brand ${className}`}
+      className={`${base} btn-secondary ${className}`}
     >
       {children}
     </Link>

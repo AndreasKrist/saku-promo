@@ -1,77 +1,43 @@
 @import 'tailwindcss';
 
-/*
- * Warm cacao identity. These tokens are copied verbatim from the app repo
- * (apps/web/src/app/globals.css) so the marketing site and the product read
- * as the same company. Do not invent new hues here — stay inside oklch
- * hue 42–68.
- */
 @theme {
-  --color-canvas: oklch(0.972 0.014 67);
-  --color-surface: oklch(0.992 0.007 68);
+  --color-canvas: oklch(0.965 0.018 67);
+  --color-surface: oklch(0.992 0.008 68);
+  --color-paper: oklch(0.985 0.015 72);
   --color-ink: oklch(0.22 0.031 43);
-  --color-muted: oklch(0.5 0.03 52);
-  --color-line: oklch(0.885 0.025 60);
+  --color-muted: oklch(0.49 0.031 52);
+  --color-line: oklch(0.875 0.03 60);
   --color-brand: oklch(0.65 0.12 58);
   --color-brand-dark: oklch(0.34 0.07 43);
-  --color-brand-soft: oklch(0.925 0.045 65);
+  --color-brand-soft: oklch(0.92 0.052 65);
   --color-positive: oklch(0.48 0.12 155);
   --color-negative: oklch(0.53 0.16 27);
-
-  /* Marketing-only: the full-bleed dark sections. On-hue near-black. */
-  --color-deep: oklch(0.16 0.035 42);
-  --color-deep-line: oklch(0.32 0.035 45);
+  --color-deep: oklch(0.17 0.038 42);
+  --color-deep-soft: oklch(0.225 0.042 44);
+  --color-deep-line: oklch(0.32 0.038 45);
 
   --font-sans:
-    'Segoe UI Variable', 'SF Pro Text', 'SF Pro Display', ui-sans-serif, system-ui,
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    'Segoe UI Variable', 'SF Pro Text', ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display:
+    'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
   --font-mono: 'SFMono-Regular', 'Cascadia Code', 'Roboto Mono', ui-monospace, monospace;
 
   --radius-sm: 0.65rem;
   --radius-md: 0.9rem;
-  --radius-lg: 1.15rem;
-  --radius-xl: 1.5rem;
+  --radius-lg: 1.2rem;
+  --radius-xl: 1.7rem;
 }
 
 :root {
   color-scheme: light;
   --shadow-surface:
-    0 1px 2px oklch(0.25 0.03 45 / 4%), 0 12px 40px oklch(0.25 0.03 45 / 7%);
+    0 1px 2px oklch(0.25 0.03 45 / 5%), 0 18px 48px oklch(0.25 0.03 45 / 8%);
+  --shadow-float: 0 28px 80px oklch(0.13 0.04 42 / 24%);
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  --glow: oklch(0.87 0.09 62 / 30%);
-  /* Primary button reads against whatever ground it sits on — see .section-deep. */
-  --btn-bg: oklch(0.34 0.07 43);
-  --btn-fg: oklch(0.985 0.008 68);
-}
-
-/*
- * The app is light-only. A marketing page, though, gets opened at night —
- * remap the tokens rather than flashing white. Same hue family, inverted
- * lightness. The deliberately-dark sections go a shade deeper than canvas
- * so the light/dark section rhythm survives the remap.
- */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --color-canvas: oklch(0.196 0.026 45);
-    --color-surface: oklch(0.245 0.028 45);
-    --color-ink: oklch(0.955 0.012 67);
-    --color-muted: oklch(0.735 0.024 58);
-    --color-line: oklch(0.33 0.03 48);
-    --color-brand: oklch(0.76 0.115 62);
-    --color-brand-dark: oklch(0.86 0.09 64);
-    --color-brand-soft: oklch(0.315 0.05 50);
-    --color-positive: oklch(0.74 0.13 155);
-    --color-negative: oklch(0.71 0.15 27);
-    --color-deep: oklch(0.125 0.028 42);
-    --color-deep-line: oklch(0.3 0.032 45);
-    --shadow-surface:
-      0 1px 2px oklch(0 0 0 / 30%), 0 12px 40px oklch(0 0 0 / 35%);
-    --glow: oklch(0.62 0.1 60 / 20%);
-    --btn-bg: oklch(0.86 0.09 64);
-    --btn-fg: oklch(0.17 0.03 43);
-  }
+  --btn-bg: var(--color-brand-dark);
+  --btn-fg: oklch(0.99 0.008 68);
 }
 
 * {
@@ -80,15 +46,15 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
   background: var(--color-canvas);
   -webkit-text-size-adjust: 100%;
 }
 
 body {
   min-width: 320px;
-  background:
-    radial-gradient(circle at 92% -12%, var(--glow), transparent 32rem),
-    var(--color-canvas);
+  margin: 0;
+  background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-optical-sizing: auto;
@@ -102,153 +68,269 @@ body {
 }
 
 a,
-button {
+button,
+summary {
   -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button {
   transition:
     color 160ms var(--ease-out),
     background-color 160ms var(--ease-out),
     border-color 160ms var(--ease-out),
     opacity 160ms var(--ease-out),
-    transform 120ms var(--ease-out),
+    transform 130ms var(--ease-out),
     box-shadow 180ms var(--ease-out);
 }
 
-button:not(:disabled) {
+button:not(:disabled),
+summary {
   cursor: pointer;
 }
 
-/* The app's press convention. Feedback on pointer-down, never on release. */
 button:not(:disabled):active,
-a[data-pressable='true']:active {
+a[data-pressable='true']:active,
+summary:active {
   transform: scale(0.975);
 }
 
 :focus-visible {
-  outline: 3px solid oklch(0.68 0.11 58 / 45%);
-  outline-offset: 2px;
+  outline: 3px solid oklch(0.68 0.11 58 / 48%);
+  outline-offset: 3px;
 }
-
-/* ---------- brand lockup: identical metrics to the app's BrandLogo ---------- */
 
 .brand-lockup {
   display: inline-flex;
   min-width: 0;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.7rem;
 }
 
 .brand-mark {
   flex: 0 0 auto;
-  border-radius: 0.78rem;
+  border-radius: 0.72rem;
   object-fit: cover;
   box-shadow:
-    inset 0 1px 0 oklch(1 0 0 / 20%),
+    inset 0 1px 0 oklch(1 0 0 / 22%),
     0 7px 20px oklch(0.33 0.065 45 / 18%);
 }
 
 .brand-word {
   display: block;
   font-size: 1.05rem;
-  font-weight: 820;
+  font-weight: 850;
   letter-spacing: -0.065em;
   line-height: 1;
 }
 
 .brand-name {
   display: block;
-  margin-top: 0.3rem;
-  font-size: 0.57rem;
-  font-weight: 620;
-  letter-spacing: 0.015em;
-  line-height: 1.35;
+  margin-top: 0.28rem;
+  font-size: 0.56rem;
+  font-weight: 650;
+  letter-spacing: 0.012em;
+  line-height: 1.3;
 }
 
-/* ---------- type scale: tracking is size-specific, tight as it grows ---------- */
-
 .display {
-  font-size: clamp(2.4rem, 7.2vw, 5.25rem);
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -0.042em;
+  font-family: var(--font-display);
+  font-size: clamp(3.25rem, 8.8vw, 7.5rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.058em;
   text-wrap: balance;
 }
 
 .headline {
-  font-size: clamp(1.9rem, 4.6vw, 3.35rem);
-  font-weight: 780;
-  line-height: 1.06;
-  letter-spacing: -0.034em;
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 5vw, 4.5rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
   text-wrap: balance;
 }
 
 .subhead {
-  font-size: clamp(1.05rem, 1.9vw, 1.4rem);
-  font-weight: 450;
-  line-height: 1.5;
-  letter-spacing: -0.011em;
+  font-size: clamp(1.02rem, 1.7vw, 1.26rem);
+  font-weight: 470;
+  line-height: 1.58;
+  letter-spacing: -0.014em;
   text-wrap: pretty;
 }
 
 .eyebrow {
-  font-size: 0.78rem;
-  font-weight: 680;
-  letter-spacing: 0.085em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 760;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
 }
 
-/* ---------- section chrome ---------- */
-
-.section-deep {
-  background: var(--color-deep);
-  --color-ink: oklch(0.97 0.012 67);
-  --color-muted: oklch(0.75 0.028 58);
-  --color-surface: oklch(0.215 0.032 43);
-  --color-line: var(--color-deep-line);
-  --color-brand-dark: oklch(0.9 0.075 64);
-  --btn-bg: oklch(0.9 0.075 64);
-  --btn-fg: oklch(0.17 0.03 43);
-  color: var(--color-ink);
-}
-
-.btn-primary {
-  background: var(--btn-bg);
-  color: var(--btn-fg);
-  box-shadow: 0 10px 30px oklch(0.33 0.065 45 / 22%);
-}
-
-.btn-primary:hover {
-  filter: brightness(1.08);
+.eyebrow::before {
+  width: 1.25rem;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  content: '';
 }
 
 .rail {
   width: 100%;
-  max-width: 78rem;
+  max-width: 82rem;
   margin-inline: auto;
-  padding-inline: clamp(1.25rem, 5vw, 3rem);
+  padding-inline: clamp(1.15rem, 4.5vw, 3.25rem);
+}
+
+.section-pad {
+  padding-block: clamp(5.5rem, 10vw, 9rem);
+}
+
+.section-deep {
+  --color-ink: oklch(0.97 0.012 67);
+  --color-muted: oklch(0.76 0.026 58);
+  --color-surface: var(--color-deep-soft);
+  --color-line: var(--color-deep-line);
+  --color-brand-dark: oklch(0.91 0.075 64);
+  --btn-bg: oklch(0.91 0.075 64);
+  --btn-fg: oklch(0.17 0.03 43);
+  background: var(--color-deep);
+  color: var(--color-ink);
+}
+
+.deep-wash {
+  background:
+    radial-gradient(circle at 88% 8%, oklch(0.55 0.1 56 / 25%), transparent 25rem),
+    radial-gradient(circle at 8% 92%, oklch(0.4 0.07 48 / 20%), transparent 30rem),
+    var(--color-deep);
+}
+
+.btn-primary {
+  border: 1px solid color-mix(in oklab, var(--btn-bg), black 8%);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: 0 10px 28px oklch(0.25 0.055 44 / 22%);
+}
+
+.btn-secondary {
+  border: 1px solid var(--color-line);
+  background: color-mix(in oklab, var(--color-surface) 86%, transparent);
+  color: var(--color-ink);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 70%);
 }
 
 .card {
   border: 1px solid var(--color-line);
   border-radius: var(--radius-lg);
+  background: color-mix(in oklab, var(--color-surface) 96%, transparent);
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 68%),
+    var(--shadow-surface);
+}
+
+.screen-card {
+  color-scheme: light;
+  --color-canvas: oklch(0.972 0.014 67);
+  --color-surface: oklch(0.992 0.007 68);
+  --color-ink: oklch(0.22 0.031 43);
+  --color-muted: oklch(0.43 0.035 50);
+  --color-line: oklch(0.84 0.03 58);
+  --color-brand: oklch(0.61 0.13 56);
+  --color-brand-dark: oklch(0.31 0.073 42);
+  --color-brand-soft: oklch(0.92 0.052 65);
+  --color-positive: oklch(0.42 0.125 155);
+  --color-negative: oklch(0.48 0.16 27);
+  --btn-fg: oklch(0.99 0.008 68);
+  border-color: var(--color-line);
   background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-float);
+}
+
+.paper-card {
+  position: relative;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
   box-shadow: var(--shadow-surface);
 }
 
-.lift {
-  transition:
-    transform 220ms var(--ease-out),
-    box-shadow 220ms var(--ease-out);
+.dashboard-bar {
+  transform: scaleY(0.14);
+  transform-origin: bottom;
+  animation: dashboard-bar-grow 650ms var(--ease-out) forwards;
 }
 
-.lift:hover {
-  transform: translateY(-2px);
+@keyframes dashboard-bar-grow {
+  to {
+    transform: scaleY(1);
+  }
 }
 
-/* Translucent chrome: content scrolls underneath, no hard 1px divider. */
+.hero-status {
+  animation: hero-status-in 560ms var(--ease-out) 700ms both;
+}
+
+@keyframes hero-status-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
 .chrome {
-  background: color-mix(in oklab, var(--color-canvas) 72%, transparent);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid color-mix(in oklab, var(--color-line) 78%, transparent);
+  background: color-mix(in oklab, var(--color-canvas) 82%, transparent);
+  box-shadow: 0 8px 34px oklch(0.22 0.03 44 / 5%);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+
+.mobile-menu[open] .mobile-menu-icon {
+  transform: rotate(45deg);
+}
+
+.mobile-menu-panel {
+  transform-origin: top right;
+  transition:
+    opacity 170ms var(--ease-out),
+    transform 190ms var(--ease-out);
+}
+
+.mobile-menu:not([open]) .mobile-menu-panel {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+}
+
+.faq-item {
+  interpolate-size: allow-keywords;
+}
+
+.faq-item::details-content {
+  block-size: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    block-size 200ms var(--ease-out),
+    opacity 160ms var(--ease-out),
+    content-visibility 200ms allow-discrete;
+}
+
+.faq-item[open]::details-content {
+  block-size: auto;
+  opacity: 1;
 }
 
 .hide-scrollbar {
@@ -259,9 +341,70 @@ a[data-pressable='true']:active {
   display: none;
 }
 
-.tnum {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1;
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 34px oklch(0.25 0.055 44 / 28%);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--color-brand);
+    background: var(--color-brand-soft);
+  }
+
+  .lift {
+    transition:
+      transform 220ms var(--ease-out),
+      border-color 220ms var(--ease-out),
+      box-shadow 220ms var(--ease-out);
+  }
+
+  .lift:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in oklab, var(--color-brand) 55%, var(--color-line));
+    box-shadow: 0 22px 56px oklch(0.25 0.03 45 / 11%);
+  }
+
+  .screen-hover {
+    transition: transform 220ms var(--ease-out);
+  }
+
+  .screen-hover:hover {
+    transform: translateY(-4px) rotate(0.35deg);
+  }
+}
+
+@media (max-width: 639px) {
+  .display {
+    font-size: clamp(3.1rem, 16vw, 4.5rem);
+  }
+
+  .headline {
+    font-size: clamp(2.2rem, 12vw, 3.25rem);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-canvas: oklch(0.19 0.026 45);
+    --color-surface: oklch(0.245 0.028 45);
+    --color-paper: oklch(0.235 0.03 48);
+    --color-ink: oklch(0.955 0.012 67);
+    --color-muted: oklch(0.74 0.024 58);
+    --color-line: oklch(0.33 0.03 48);
+    --color-brand: oklch(0.76 0.115 62);
+    --color-brand-dark: oklch(0.86 0.09 64);
+    --color-brand-soft: oklch(0.315 0.05 50);
+    --shadow-surface: 0 1px 2px oklch(0 0 0 / 28%), 0 18px 48px oklch(0 0 0 / 25%);
+    --btn-bg: oklch(0.86 0.09 64);
+    --btn-fg: oklch(0.17 0.03 43);
+  }
+
+  .card,
+  .btn-secondary {
+    box-shadow: var(--shadow-surface);
+  }
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -272,12 +415,6 @@ a[data-pressable='true']:active {
   }
 }
 
-/*
- * Mirrors the app's pattern exactly. Every scroll-linked effect in
- * src/components also checks this via useReducedMotion() and renders the
- * settled state instead of pinning/scrubbing — the CSS below is the backstop,
- * not the whole story.
- */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -290,5 +427,9 @@ a[data-pressable='true']:active {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .dashboard-bar {
+    transform: scaleY(1);
   }
 }
