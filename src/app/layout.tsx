@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { SmoothScroll } from '@/components/smooth-scroll'
 import { SiteHeader } from '@/components/site-header'
 import { Footer } from '@/components/sections/footer'
 import { site } from '@/lib/site'
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="id">
       <body>
+        <SmoothScroll />
         <a
           href="#konten"
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-[var(--radius-sm)] focus:bg-surface focus:px-4 focus:py-2 focus:font-semibold"
