@@ -1,11 +1,13 @@
 import Image from 'next/image'
 
+/**
+ * Same lockup as the app's <BrandLogo>: mark + wordmark at -0.065em / 820,
+ * tagline underneath at 0.57rem. Kept pixel-identical on purpose.
+ */
 export function BrandLogo({
-  inverse = false,
   compact = false,
   priority = false,
 }: {
-  inverse?: boolean
   compact?: boolean
   priority?: boolean
 }) {
@@ -22,11 +24,9 @@ export function BrandLogo({
         sizes={compact ? '36px' : '44px'}
       />
       <span className="min-w-0">
-        <span className={`brand-word ${inverse ? 'text-white' : 'text-brand-dark'}`}>
-          SAKU
-        </span>
+        <span className="brand-word text-brand-dark">SAKU</span>
         {!compact && (
-          <span className={`brand-name ${inverse ? 'text-white/48' : 'text-muted'}`}>
+          <span className="brand-name text-muted">
             Sistem Akuntansi &amp;
             <br />
             Kepemilikan Usaha

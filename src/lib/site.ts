@@ -4,7 +4,7 @@ export const site = {
   tagline: 'Sistem Akuntansi & Kepemilikan Usaha',
   appUrl: 'https://app.saku-umkm.site',
   description:
-    'Catat uang masuk-keluar, modal setiap orang, dan bagian untung tiap mitra. Semua melihat angka yang sama tanpa perlu mencari di chat lama.',
+    'Catat transaksi, modal, dan bagi hasil tanpa debat soal siapa membayar dan siapa berhak menarik. Untuk usaha kecil Indonesia yang dijalankan beberapa mitra.',
 } as const
 
 /** Whole rupiah, dot-separated — same presentation as the app. */

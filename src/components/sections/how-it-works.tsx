@@ -1,122 +1,170 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
-import { Reveal, ScrollParallax } from '@/components/reveal'
 import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+  type MotionValue,
+} from 'motion/react'
+import {
+  ScreenTransaksi,
+  ScreenModal,
   ScreenKepemilikan,
   ScreenLogAktivitas,
-  ScreenTransaksi,
 } from '@/components/screens'
+import { beatRamp } from '@/lib/beats'
 
 const steps = [
   {
-    number: '01',
-    title: 'Catat transaksinya',
-    body: 'Masukkan pemasukan atau pengeluaran. Tidak perlu memahami istilah akuntansi terlebih dahulu.',
+    title: 'Catat transaksi',
+    body: 'Pemasukan atau pengeluaran, secepat menulis di buku.',
+    screen: <ScreenTransaksi />,
   },
   {
-    number: '02',
-    title: 'Pilih siapa yang membayar',
-    body: 'Pilih kas usaha atau uang pribadi mitra. Dari sini SAKU tahu cara mencatatnya.',
+    title: 'Pilih siapa yang bayar',
+    body: 'Kas usaha, atau uang pribadi salah satu mitra. Satu ketukan.',
+    screen: <ScreenModal />,
   },
   {
-    number: '03',
-    title: 'Semua langsung diperbarui',
-    body: 'Saldo, modal, porsi kepemilikan, laporan, dan riwayat diperbarui secara otomatis.',
+    title: 'Porsi kepemilikan terhitung sendiri',
+    body: 'Bayar pakai uang sendiri otomatis jadi tambahan modal — bukan jasa yang harus diingat.',
+    screen: <ScreenKepemilikan />,
+  },
+  {
+    title: 'Semua mitra lihat angka yang sama',
+    body: 'Satu catatan bersama, lengkap dengan siapa melakukan apa.',
+    screen: <ScreenLogAktivitas />,
   },
 ]
 
-export function HowItWorks() {
-  const ref = useRef<HTMLElement>(null)
-  const reduceMotion = useReducedMotion()
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start center', 'end center'],
-  })
-  const progressTransform = useTransform(
-    scrollYProgress,
-    (progress) => `scaleX(${progress})`,
-  )
+function StepItem({
+  progress,
+  index,
+  step,
+}: {
+  progress: MotionValue<number>
+  index: number
+  step: (typeof steps)[number]
+}) {
+  // Inactive steps dim rather than disappear — the list stays readable as a
+  // whole, so the reader can see where they are in the sequence.
+  const ramp = beatRamp(index, steps.length)
+  const opacity = useTransform(progress, ramp.input, ramp.dim)
 
   return (
-    <section
-      ref={ref}
-      id="cara-kerja"
-      className="section-deep deep-wash section-pad overflow-hidden"
-    >
-      <div className="rail">
-        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-end lg:gap-16">
-          <Reveal className="max-w-xl">
-            <p className="eyebrow text-brand">Cara kerjanya</p>
-            <h2 className="headline mt-5">Catat sekali. Sisanya SAKU yang urus.</h2>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <p className="subhead max-w-2xl text-muted lg:pb-1">
-              Tidak ada pengaturan akun yang rumit. Mulai dari transaksi sehari-hari, lalu
-              SAKU memastikan semua perhitungannya tetap benar.
-            </p>
-          </Reveal>
-        </div>
-
-        <div className="relative mt-14">
-          <motion.div
-            aria-hidden="true"
-            style={{
-              transform: reduceMotion ? 'scaleX(1)' : progressTransform,
-              transformOrigin: 'left',
-            }}
-            className="absolute inset-x-0 top-0 z-10 h-[3px] rounded-full bg-brand"
-          />
-          <Reveal>
-            <ol className="grid gap-px overflow-hidden rounded-[var(--radius-xl)] border border-line bg-line lg:grid-cols-3">
-              {steps.map((step) => (
-                <li key={step.number} className="bg-surface p-6 sm:p-8">
-                  <span className="tnum font-[family-name:var(--font-display)] text-4xl text-brand">
-                    {step.number}
-                  </span>
-                  <h3 className="mt-8 text-lg font-bold tracking-[-0.025em]">
-                    {step.title}
-                  </h3>
-                  <p className="mt-3 text-[0.88rem] leading-relaxed text-muted">
-                    {step.body}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </Reveal>
-        </div>
-
-        <div className="relative mt-16 grid gap-5 md:grid-cols-3 md:items-start">
-          <Reveal delay={0}>
-            <ScrollParallax amount={22} rotate={0.7}>
-              <div className="md:translate-y-8 md:-rotate-1">
-                <div className="screen-hover">
-                  <ScreenTransaksi />
-                </div>
-              </div>
-            </ScrollParallax>
-          </Reveal>
-          <Reveal delay={0.07}>
-            <ScrollParallax amount={34} rotate={0.5}>
-              <div className="md:-translate-y-2 md:rotate-1">
-                <div className="screen-hover">
-                  <ScreenKepemilikan />
-                </div>
-              </div>
-            </ScrollParallax>
-          </Reveal>
-          <Reveal delay={0.14}>
-            <ScrollParallax amount={18} rotate={0.8}>
-              <div className="md:translate-y-12 md:-rotate-1">
-                <div className="screen-hover">
-                  <ScreenLogAktivitas />
-                </div>
-              </div>
-            </ScrollParallax>
-          </Reveal>
-        </div>
+    <motion.li style={{ opacity }} className="flex gap-4">
+      <span className="tnum mt-0.5 w-6 shrink-0 text-[0.8rem] font-extrabold text-brand">
+        {String(index + 1).padStart(2, '0')}
+      </span>
+      <div>
+        <h3 className="text-[1.15rem] font-bold tracking-[-0.022em]">{step.title}</h3>
+        <p className="mt-1.5 text-[0.92rem] leading-relaxed text-muted">{step.body}</p>
       </div>
-    </section>
+    </motion.li>
+  )
+}
+
+function StepScreen({
+  progress,
+  index,
+  children,
+}: {
+  progress: MotionValue<number>
+  index: number
+  children: React.ReactNode
+}) {
+  const ramp = beatRamp(index, steps.length, 26)
+  const opacity = useTransform(progress, ramp.input, ramp.opacity)
+  const y = useTransform(progress, ramp.input, ramp.y)
+
+  return (
+    <motion.div style={{ opacity, y }} className="absolute inset-x-0 top-0">
+      {children}
+    </motion.div>
+  )
+}
+
+export function HowItWorks() {
+  const ref = useRef<HTMLElement>(null)
+  const reduced = useReducedMotion() ?? false
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start start', 'end end'],
+  })
+
+  const heading = (
+    <div className="max-w-md">
+      <p className="eyebrow text-brand">Cara kerjanya</p>
+      <h2 className="headline mt-4">Empat langkah, lalu tidak ada lagi yang ditebak.</h2>
+    </div>
+  )
+
+  // Plain stacked layout: what small viewports and reduced-motion readers get.
+  // The pinned version costs frame rate on mid-range phones and buys nothing
+  // there, so it simply doesn't run.
+  const stacked = (
+    <div className="rail py-24">
+      {heading}
+      <ol className="mt-14 grid gap-14">
+        {steps.map((s, i) => (
+          <li key={s.title} className="grid gap-6 sm:grid-cols-2 sm:items-center">
+            <div>
+              <span className="tnum text-[0.8rem] font-extrabold text-brand">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 className="mt-1 text-[1.15rem] font-bold tracking-[-0.022em]">
+                {s.title}
+              </h3>
+              <p className="mt-1.5 text-[0.92rem] leading-relaxed text-muted">
+                {s.body}
+              </p>
+            </div>
+            <div className="mx-auto w-full max-w-sm">{s.screen}</div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  )
+
+  if (reduced) {
+    return <section id="cara-kerja">{stacked}</section>
+  }
+
+  return (
+    <>
+      <section id="cara-kerja" className="lg:hidden">
+        {stacked}
+      </section>
+      <section ref={ref} className="relative hidden h-[420vh] lg:block">
+        <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
+          <div className="rail w-full">
+            <div className="grid items-center gap-16 lg:grid-cols-[1fr_22rem]">
+              <div>
+                {heading}
+                <ol className="mt-10 grid gap-7">
+                  {steps.map((s, i) => (
+                    <StepItem
+                      key={s.title}
+                      progress={scrollYProgress}
+                      index={i}
+                      step={s}
+                    />
+                  ))}
+                </ol>
+              </div>
+              <div className="relative h-[26rem]">
+                {steps.map((s, i) => (
+                  <StepScreen key={s.title} progress={scrollYProgress} index={i}>
+                    {s.screen}
+                  </StepScreen>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   )
 }

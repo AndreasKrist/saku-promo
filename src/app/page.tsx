@@ -1,5 +1,4 @@
 import { Hero } from '@/components/sections/hero'
-import { ScrollTicker } from '@/components/scroll-ticker'
 import { Problem } from '@/components/sections/problem'
 import { HowItWorks } from '@/components/sections/how-it-works'
 import { Features } from '@/components/sections/features'
@@ -14,13 +13,12 @@ export default function Page() {
   return (
     <>
       <Hero />
-      <ScrollTicker />
       <Problem />
       <HowItWorks />
       <Features />
+      <Trust />
       <Reports />
       <Partners />
-      <Trust />
       <Pricing />
       <Faq />
       <FinalCta />
