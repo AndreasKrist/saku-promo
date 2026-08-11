@@ -1,3 +1,7 @@
+'use client'
+
+import { useEffect, useRef } from 'react'
+
 const features = [
   ['Transaksi', 'Pemasukan dan pengeluaran, dengan sumber uang yang jelas.'],
   ['Penambahan modal', 'Mitra menyetor modal; porsi langsung menyesuaikan.'],
@@ -14,6 +18,54 @@ const features = [
 ]
 
 export function Features() {
+  const scrollerRef = useRef<HTMLDivElement>(null)
+
+  // A trackpad sends horizontal deltas natively, so its swipe just works and
+  // glides straight to the next snap point. A mouse wheel only sends
+  // vertical deltas, in small increments — tracking those 1:1 would need
+  // many notches to cross one card. Instead, treat any wheel gesture as a
+  // single step: slide exactly one card with a smooth transition, then
+  // ignore further wheel input until that slide finishes so one long scroll
+  // can't queue up several slides at once.
+  useEffect(() => {
+    const el = scrollerRef.current
+    if (!el) return
+
+    let locked = false
+
+    function slide(direction: 1 | -1) {
+      const cards = Array.from(el!.children) as HTMLElement[]
+      if (cards.length < 2) return
+      const step = cards[1].offsetLeft - cards[0].offsetLeft
+      const max = el!.scrollWidth - el!.clientWidth
+      const target = Math.min(max, Math.max(0, el!.scrollLeft + direction * step))
+
+      locked = true
+      el!.scrollTo({ left: target, behavior: 'smooth' })
+      window.setTimeout(() => {
+        locked = false
+      }, 500)
+    }
+
+    function onWheel(e: WheelEvent) {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return
+
+      const max = el!.scrollWidth - el!.clientWidth
+      const atStart = el!.scrollLeft <= 0
+      const atEnd = el!.scrollLeft >= max - 1
+      const scrollingForward = e.deltaY > 0
+      if ((scrollingForward && atEnd) || (!scrollingForward && atStart)) return
+
+      e.preventDefault()
+      e.stopPropagation()
+      if (locked) return
+      slide(scrollingForward ? 1 : -1)
+    }
+
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [])
+
   return (
     <section id="fitur" className="py-24">
       <div className="rail">
@@ -24,10 +76,17 @@ export function Features() {
       </div>
 
       {/* Bleeds to the viewport edge, but the first card still lines up with
-          the rail. Inline style because the padding is a max()/calc() pair. */}
+          the rail — this mirrors .rail's own left edge exactly: half the
+          leftover space once it hits its 78rem max-width, plus its
+          clamp(1.25rem, 5vw, 3rem) padding. A flat 1.25rem here (instead of
+          that same clamp) used to fall out of sync with the rail at most
+          mid-range window widths. */}
       <div
-        className="hide-scrollbar mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 sm:gap-5"
-        style={{ paddingInline: 'max(1.25rem, calc(50vw - 39rem + 1.25rem))' }}
+        ref={scrollerRef}
+        className="hide-scrollbar mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-contain pb-4 sm:gap-5"
+        style={{
+          paddingInline: 'calc(max(0px, (100vw - 78rem) / 2) + clamp(1.25rem, 5vw, 3rem))',
+        }}
         tabIndex={0}
         aria-label="Daftar fitur, geser ke samping"
       >
