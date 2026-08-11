@@ -7,20 +7,21 @@
  * hue 42–68.
  */
 @theme {
-  --color-canvas: oklch(0.972 0.014 67);
-  --color-surface: oklch(0.992 0.007 68);
+  --color-canvas: oklch(0.96 0.023 63);
+  --color-surface: oklch(0.985 0.013 66);
   --color-ink: oklch(0.22 0.031 43);
   --color-muted: oklch(0.5 0.03 52);
-  --color-line: oklch(0.885 0.025 60);
+  --color-line: oklch(0.87 0.028 60);
   --color-brand: oklch(0.65 0.12 58);
   --color-brand-dark: oklch(0.34 0.07 43);
   --color-brand-soft: oklch(0.925 0.045 65);
   --color-positive: oklch(0.48 0.12 155);
   --color-negative: oklch(0.53 0.16 27);
 
-  /* Marketing-only: the full-bleed dark sections. On-hue near-black. */
-  --color-deep: oklch(0.16 0.035 42);
-  --color-deep-line: oklch(0.32 0.035 45);
+  /* Marketing-only: the full-bleed section variant. A warm light-brown
+     tan, a shade deeper than canvas for rhythm — not near-black. */
+  --color-deep: oklch(0.82 0.06 58);
+  --color-deep-line: oklch(0.7 0.05 54);
 
   --font-sans:
     'Segoe UI Variable', 'SF Pro Text', 'SF Pro Display', ui-sans-serif, system-ui,
@@ -200,14 +201,29 @@ a[data-pressable='true']:active {
 
 .section-deep {
   background: var(--color-deep);
-  --color-ink: oklch(0.97 0.012 67);
-  --color-muted: oklch(0.75 0.028 58);
-  --color-surface: oklch(0.215 0.032 43);
+  --color-ink: oklch(0.26 0.045 44);
+  --color-muted: oklch(0.44 0.04 48);
+  --color-surface: oklch(0.93 0.035 62);
   --color-line: var(--color-deep-line);
-  --color-brand-dark: oklch(0.9 0.075 64);
-  --btn-bg: oklch(0.9 0.075 64);
-  --btn-fg: oklch(0.17 0.03 43);
+  --color-brand-dark: oklch(0.34 0.07 43);
+  --btn-bg: oklch(0.34 0.07 43);
+  --btn-fg: oklch(0.985 0.008 68);
   color: var(--color-ink);
+}
+
+/* --color-deep stays near-black in dark mode (untouched by the light-theme
+   pass above), so the light-tan overrides right above it would put a bright
+   card and dark text on a near-black section. Restore the dark-appropriate
+   pairing here — this is exactly what .section-deep used before that pass. */
+@media (prefers-color-scheme: dark) {
+  .section-deep {
+    --color-ink: oklch(0.97 0.012 67);
+    --color-muted: oklch(0.75 0.028 58);
+    --color-surface: oklch(0.215 0.032 43);
+    --color-brand-dark: oklch(0.9 0.075 64);
+    --btn-bg: oklch(0.9 0.075 64);
+    --btn-fg: oklch(0.17 0.03 43);
+  }
 }
 
 .btn-primary {

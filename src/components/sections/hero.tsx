@@ -46,7 +46,7 @@ export function Hero() {
 
         <motion.div
           style={reduced ? undefined : { y }}
-          className="mt-14 [perspective:1400px] sm:mt-20"
+          className="mt-20 [perspective:1400px] sm:mt-28"
         >
           <motion.div
             style={reduced ? undefined : { rotateX, scale }}
